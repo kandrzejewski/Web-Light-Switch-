@@ -1,0 +1,384 @@
+<html>  
+  
+<head>  
+    <title>Switch</title>  
+	<meta charset="utf-8">
+	<style>
+		h1 {
+			color: white;
+			text-align: center;
+			position: static;
+			white-space: nowrap;
+			font-size: 1.5em;
+			
+		}
+		body {
+		  padding: 0;
+		  margin: 0;
+		  display: flex;
+		  background: #303030;
+		  align-items: center;
+		  justify-content: center;
+		}
+		body:after {
+		  content: "";
+		  opacity: 0.7;
+		  width: 100%;
+		  min-height: 100vh;
+		  background: #303033 url("http://subtlepatterns.com/patterns/broken_noise.png");
+		  position: absolute;
+		  z-index: 1;
+		}
+		.cont {
+		margin-left: 20px;
+		margin-right: 20px;
+		align-items: center;
+		justify-content: center;
+		position: relative;
+		}
+		.button-group {
+		  position: static;
+		  z-index: 2;
+		  display: flex;
+		  height: 100px;
+		  background-color: #000;
+		  border-radius: 7px;
+		  padding: 4px;
+		}
+		.button-group > div {
+		  cursor: pointer;
+		  flex: 2;
+		  background-image: linear-gradient(to top, #242424 0%, #303030 100%);
+		  display: flex;
+		  align-items: center;
+		  justify-content: center;
+		  margin: 1px;
+		  transition: 0.2s;
+		  font-size: 2.5em;
+		  box-shadow: inset 0 20px 4px -21px rgba(255,255,255,0.4), 0 19px 13px 0 rgba(0,0,0,0.3);
+		  color: #181818;
+		  position: relative;
+		  z-index: 2;
+		}
+		.button-group > div:before {
+		  content: "";
+		  display: block;
+		  width: 0.8em;
+		  height: 0.8em;
+		  transition: 0.1s;
+		  background-image: radial-gradient(circle 30px at center, #ebf7ff 0%, #b3e1ff 47%, #b3e1ff 100%);
+		  position: absolute;
+		  filter: blur(15px);
+		  top: 50%;
+		  left: 50%;
+		  border-radius: 50%;
+		  transform: translate(-50%, -50%);
+		  opacity: 0;
+		}
+		.button-group > div:after {
+		  content: "";
+		  display: block;
+		  height: 70px;
+		  width: 1px;
+		  position: absolute;
+		  border-radius: 50%;
+		  z-index: -1;
+		  opacity: 0;
+		  transition: 0.2s;
+		  filter: blur(0px);
+		  box-shadow: -75px 0 0px 0px rgba(179,225,255,0.3), 74px 0 0px 0px rgba(179,225,255,0.35);
+		}
+		.button-group > div svg {
+		  height: 2em;
+		  width: 2em;
+		  position: relative;
+		  display: block;
+		  fill: #181818;
+		  filter: drop-shadow(0 1px 1px rgba(255,255,255,0.15)) url("#inset-shadow");
+		}
+		.button-group > div.active {
+		  background-image: linear-gradient(to top, #151515 0%, #1d1d1d 100%);
+		  box-shadow: inset 0 16px 14px -21px transparent, 0 0px 13px 0 rgba(0,0,0,0.3), inset 0 0 7px 2px rgba(0,0,0,0.4);
+		}
+		.button-group > div.active:before {
+		  width: 1em;
+		  height: 1em;
+		  opacity: 0.8;
+		}
+		.button-group > div.active:after {
+		  opacity: 0;
+		}
+		.button-group > div.active svg {
+		  fill: url("#active");
+		  filter: drop-shadow(0 1px 1px rgba(255,255,255,0));
+		}
+		.button-group div:first-of-type {
+		  border-radius: 4px 0 0 4px;
+		}
+		.button-group div:first-of-type:after {
+		  box-shadow: -85px 0 18px 1px transparent, 83px 0 12px 1px #b3e1ff;
+		}
+		.button-group div:last-of-type {
+		  border-radius: 0 4px 4px 0;
+		}
+		.button-group div:last-of-type:after {
+		  box-shadow: -85px 0 18px 1px #b3e1ff, 83px 0 12px 1px transparent;
+		}
+		.svg-filters {
+		  height: 0;
+		  width: 0;
+		}
+		.weather {
+			position: relative;
+			clear: both;
+		}
+		.data {
+		  background-color: #000;
+		  position: relative;
+		  align-items: center;
+		  justify-content: center;
+		  margin-top: 30px;
+		  width: 800px;
+		  box-shadow: inset 0 16px 14px -21px transparent, 0 0px 13px 0 rgba(0,0,0,0.3), inset 0 0 7px 2px rgba(0,0,0,0.4);
+		}
+		
+		.image {
+		  background-image: linear-gradient(to top, #242424 0%, #303030 100%);
+		  display: flex;
+		  padding: 10px;
+		  font-size: 2.5em;
+		  align-items: center;
+		  justify-content: center;
+		  width: 440px;
+		  float: left;
+		  position:relative;
+		  box-shadow: inset 0 20px 4px -21px rgba(255,255,255,0.4), 0 19px 13px 0 rgba(0,0,0,0.3);
+		  color: #181818;
+		  z-index: 2;
+		}
+		.value {
+		  background-image: linear-gradient(to top, #242424 0%, #303030 100%);
+		  display: flex;
+		  padding: 10px;
+		  font-size: 2.5em;
+		  align-items: center;
+		  justify-content: center;
+		  min-height: 80px;
+		  width: 40%;
+		  position:relative;
+		  float: left;
+		  box-shadow: inset 0 20px 4px -21px rgba(255,255,255,0.4), 0 19px 13px 0 rgba(0,0,0,0.3);
+		  z-index: 2;
+		  color: white;
+		}
+		.image > svg {
+		  height: 2em;
+		  width: 2em;
+		  position: relative;
+		  display: block;
+		  fill: #181818;
+		  filter: drop-shadow(0 1px 1px rgba(255,255,255,0.15)) url("#inset-shadow");
+		}
+		.temp {
+		  margin-left: 20px;
+		}
+	</style>
+</head>  
+  
+<body>  
+	<div class="cont">	
+		<h1>Automatyczny przełącznik światła z czujnikiem temperatury</h1>  
+		<div class="button-group">
+			<div id="turn_on">
+				<svg viewBox="0 0 24 24" fill-rule="evenodd"><path d="M19 6.734c0 4.164-3.75 6.98-3.75 10.266h-1.992c.001-2.079.996-3.826 1.968-5.513.913-1.585 1.774-3.083 1.774-4.753 0-3.108-2.518-4.734-5.004-4.734-2.482 0-4.996 1.626-4.996 4.734 0 1.67.861 3.168 1.774 4.753.972 1.687 1.966 3.434 1.967 5.513h-1.991c0-3.286-3.75-6.103-3.75-10.266 0-4.343 3.498-6.734 6.996-6.734 3.502 0 7.004 2.394 7.004 6.734zm-4 11.766c0 .276-.224.5-.5.5h-5c-.276 0-.5-.224-.5-.5s.224-.5.5-.5h5c.276 0 .5.224.5.5zm0 2c0 .276-.224.5-.5.5h-5c-.276 0-.5-.224-.5-.5s.224-.5.5-.5h5c.276 0 .5.224.5.5zm-1.701 3.159c-.19.216-.465.341-.752.341h-1.094c-.287 0-.562-.125-.752-.341l-1.451-1.659h5.5l-1.451 1.659zm-3.629-16.347l-1.188-.153c.259-1.995 1.5-3.473 3.518-3.847l.219 1.177c-1.947.361-2.433 1.924-2.549 2.823z"/></svg><!--[if lt IE 9]><em>CodePen</em><![endif]-->
+			</div>
+			<div id="turn_off">
+				<svg viewBox="0 0 24 24" fill-rule="evenodd"><path d="M9.25 22h5.5l-1.451 1.659c-.19.216-.465.341-.753.341h-1.093c-.288 0-.562-.125-.752-.341l-1.451-1.659zm-.535-5.514c.019.171.035.342.035.514h6.5c0-3.171 3.483-5.91 3.727-9.84l-10.262 9.326zm5.785 1.514h-5c-.276 0-.5.224-.5.5s.224.5.5.5h5c.276 0 .5-.224.5-.5s-.224-.5-.5-.5zm0 2h-5c-.276 0-.5.224-.5.5s.224.5.5.5h5c.276 0 .5-.224.5-.5s-.224-.5-.5-.5zm7.149-20l-3.594 3.263c-1.268-2.116-3.654-3.263-6.059-3.263-3.498 0-6.996 2.391-6.996 6.734 0 2.427 1.268 4.396 2.33 6.267l-6.33 5.733 1.346 1.5 20.654-18.75-1.351-1.484z"/></svg><!--[if lt IE 9]><em>GitHub</em><![endif]-->
+			</div>
+			<div id="get_value" class="active">
+				<svg class="temp" viewBox="0 0 24 24"><path d="M8.5 2c.827 0 1.5.673 1.5 1.5v7.525c0 1.569.514 2.287 1.411 3.05 1.01.858 1.589 2.106 1.589 3.425 0 2.481-2.019 4.5-4.5 4.5s-4.5-2.019-4.5-4.5c0-1.319.579-2.567 1.59-3.425.896-.761 1.41-1.48 1.41-3.05v-7.525c0-.827.673-1.5 1.5-1.5zm0-2c-1.933 0-3.5 1.567-3.5 3.5v7.525c0 .587-.258 1.145-.705 1.525-1.403 1.192-2.295 2.965-2.295 4.95 0 3.59 2.909 6.5 6.5 6.5s6.5-2.91 6.5-6.5c0-1.985-.892-3.758-2.295-4.95-.447-.38-.705-.938-.705-1.525v-7.525c0-1.933-1.567-3.5-3.5-3.5zm2.107 14.718c-1.012-.89-1.607-1.734-1.607-3.22v-6.498h-1v6.498c0 1.484-.597 2.332-1.607 3.22-.794.698-1.393 1.642-1.393 2.782 0 1.933 1.567 3.5 3.5 3.5s3.5-1.567 3.5-3.5c0-1.14-.599-2.083-1.393-2.782"/></svg>
+			</div>
+			<div id="home">
+				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M20 7.093v-5.093h-3v2.093l3 3zm4 5.907l-12-12-12 12h3v10h7v-5h4v5h7v-10h3zm-5 8h-3v-5h-8v5h-3v-10.26l7-6.912 7 6.99v10.182z"/></svg>
+			</div>
+		</div>
+		<div class="data">
+			<div>
+				<div class="image">
+					<svg class="temp" viewBox="0 0 24 24"><path d="M8.5 2c.827 0 1.5.673 1.5 1.5v7.525c0 1.569.514 2.287 1.411 3.05 1.01.858 1.589 2.106 1.589 3.425 0 2.481-2.019 4.5-4.5 4.5s-4.5-2.019-4.5-4.5c0-1.319.579-2.567 1.59-3.425.896-.761 1.41-1.48 1.41-3.05v-7.525c0-.827.673-1.5 1.5-1.5zm0-2c-1.933 0-3.5 1.567-3.5 3.5v7.525c0 .587-.258 1.145-.705 1.525-1.403 1.192-2.295 2.965-2.295 4.95 0 3.59 2.909 6.5 6.5 6.5s6.5-2.91 6.5-6.5c0-1.985-.892-3.758-2.295-4.95-.447-.38-.705-.938-.705-1.525v-7.525c0-1.933-1.567-3.5-3.5-3.5zm2.107 14.718c-1.012-.89-1.607-1.734-1.607-3.22v-6.498h-1v6.498c0 1.484-.597 2.332-1.607 3.22-.794.698-1.393 1.642-1.393 2.782 0 1.933 1.567 3.5 3.5 3.5s3.5-1.567 3.5-3.5c0-1.14-.599-2.083-1.393-2.782"/></svg>
+				</div>
+				<div class="value" id="temp_val">
+				</div>
+				<div class="image">
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 0c-4.87 7.197-8 11.699-8 16.075 0 4.378 3.579 7.925 8 7.925s8-3.547 8-7.925c0-4.376-3.13-8.878-8-16.075zm-.027 5.12c.467.725 1.027 1.987 1.027 3.32 0 3.908-4 4.548-4 2.17 0-1.633 1.988-4.044 2.973-5.49z"/></svg>
+				</div>
+				<div class="value" id="hum_val">
+				</div>
+			</div>	
+			<div class="weather">
+				<a  style="padding-left:10px" class="weatherwidget-io" href="https://forecast7.com/pl/52d4116d93/poznan/" data-label_1="POZNAŃ" data-label_2="Pogoda na zewnątrz" data-font="Roboto" data-icons="Climacons Animated" data-theme="metallic" >POZNAŃ WEATHER</a>
+			</div>
+		</div>
+	</div>
+	
+	<svg class="svg-filters">
+		<defs>
+			<radialGradient id="active" x1="0%" y1="0%" x2="100%" y2="0%">
+				<stop offset="0%" style="stop-color:#ebf7ff;stop-opacity:1" />
+				<stop offset="100%" style="stop-color:#b3e1ff;stop-opacity:1" />
+			</radialGradient>
+		  
+			<filter id="inset-shadow">
+				<feOffset
+					dx='-1'
+					dy='1'
+				/>
+				<feGaussianBlur
+					stdDeviation='.7'
+					result='offset-blur'
+				/>
+				<feComposite
+					operator='out'
+					in='SourceGraphic'
+					in2='offset-blur'
+					result='inverse'
+				/>
+				<feFlood
+					flood-color='black'
+					flood-opacity='0.05'
+					result='color'
+				/>
+				<feComposite
+					operator='in'
+					in='color'
+					in2='inverse'
+					result='shadow'
+				/>
+				<feComposite
+					operator='over'
+					in='shadow'
+					in2='SourceGraphic'
+				/>
+			</filter>
+		</defs>
+	</svg>
+	
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+	<script>	
+		var Socket;
+		Socket = new WebSocket('ws://' + window.location.hostname + ':80/');
+		
+		Socket.onopen = function (event) {
+			$.get( "/get_temp", function( data ) {
+				var temp_val = document.getElementById('temp_val');
+				temp_val.innerHTML = data +"°C" ;
+            });
+			$.get( "/get_hum", function( data ) {
+				var temp_val = document.getElementById('hum_val');
+				temp_val.innerHTML = data +"%" ;
+            });
+		};
+		
+		Socket.onmessage = function(evt) {
+			switch (evt.data){
+				case 'turn_on': {
+					$('#turn_on' ).addClass("active");
+					$('.button-group > div.active').not('#turn_on').removeClass('active');
+					break;
+				}
+				case 'turn_off': {
+					$('#turn_off' ).addClass("active");
+					$('.button-group > div.active').not('#turn_off').removeClass('active');
+					break;
+				}
+				case 'get_value': {
+					$('#get_value' ).addClass("active");
+					$('.button-group > div.active').not('#get_value').removeClass('active');
+					$.get( "/get_temp", function( data ) {
+						var temp_val = document.getElementById('temp_val');
+						temp_val.innerHTML = data +"°C" ;
+					});
+					$.get( "/get_hum", function( data ) {
+						var temp_val = document.getElementById('hum_val');
+						temp_val.innerHTML = data +"%" ;	
+					});
+					break;
+				}
+				case 'home': {
+					$('#home' ).addClass("active");
+					$('.button-group > div.active').not('#home').removeClass('active');
+					document.getElementById('hum_val').innerHTML = "";
+					document.getElementById('temp_val').innerHTML = "";
+					break;
+				}
+				default: {
+					if (!(document.getElementById("home").className == "active")) {
+						var obj = JSON.parse(evt.data);
+						if (obj.quantities == 'temperature') {
+							document.getElementById("temp_val").innerHTML = obj.value +"°C";
+						} else if (obj.quantities == 'humidity') {
+							document.getElementById("hum_val").innerHTML = obj.value +"%";
+						}
+					}
+					break;
+				}
+			}						
+		}
+		
+		function SendingButtonState(){
+			if (document.getElementById("turn_on").className == "active") {
+				Socket.send("turn_on");
+			}
+			if (document.getElementById("turn_off").className == "active") {
+				Socket.send("turn_off");
+			}
+			if (document.getElementById("get_value").className == "active") {
+				Socket.send("get_value");
+			}
+			if (document.getElementById("home").className == "active") {
+				Socket.send("home");
+			}
+		}
+		
+		$(".button-group > div" ).click(function() {
+			$( this ).addClass( "active" );
+			$('.button-group > div.active').not(this).removeClass('active');
+			 SendingButtonState();
+		});
+		
+		$('#turn_on').click(function() {
+			$.get( "/lights_on", function( data ) {        
+            });
+		});	
+		$('#turn_off').click(function() {
+			$.get( "/lights_off", function( data ) {        
+            });
+		});	
+		$('#get_value').click(function() {
+			$.get( "/get_temp", function( data ) {
+				var temp_val = document.getElementById('temp_val');
+				temp_val.innerHTML = data +"°C" ;
+            });
+			$.get( "/get_hum", function( data ) {
+				var temp_val = document.getElementById('hum_val');
+				temp_val.innerHTML = data +"%" ;
+            });
+		});
+		$('#home').click(function() {
+			document.getElementById('hum_val').innerHTML = "";
+			document.getElementById('temp_val').innerHTML = "";
+		});
+		
+		!function(d,s,id){
+			var js,fjs=d.getElementsByTagName(s)[0];
+			if(!d.getElementById(id)) {
+				js=d.createElement(s);
+				js.id=id;
+				js.src='https://weatherwidget.io/js/widget.min.js';
+				fjs.parentNode.insertBefore(js,fjs);
+			}
+		}
+		(document,'script','weatherwidget-io-js');
+	</script>
+</body>  
+</html> 
